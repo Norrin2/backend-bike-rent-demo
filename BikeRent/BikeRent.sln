@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRent", "BikeRent\BikeRent.csproj", "{C4D1A06B-719A-4FA9-A95D-AE80746C7410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeRent.Publisher", "BikeRent\BikeRent.Publisher.csproj", "{C4D1A06B-719A-4FA9-A95D-AE80746C7410}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRent.Domain", "BikeRent.Domain\BikeRent.Domain.csproj", "{6A5892E2-38A4-4CAF-89A5-22A885ECB4AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRent.Infra", "BikeRent.Infra\BikeRent.Infra.csproj", "{2C503693-ED5F-4DBF-905F-104655CBCE77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{C4D1A06B-719A-4FA9-A95D-AE80746C7410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4D1A06B-719A-4FA9-A95D-AE80746C7410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4D1A06B-719A-4FA9-A95D-AE80746C7410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A5892E2-38A4-4CAF-89A5-22A885ECB4AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A5892E2-38A4-4CAF-89A5-22A885ECB4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A5892E2-38A4-4CAF-89A5-22A885ECB4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A5892E2-38A4-4CAF-89A5-22A885ECB4AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C503693-ED5F-4DBF-905F-104655CBCE77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C503693-ED5F-4DBF-905F-104655CBCE77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C503693-ED5F-4DBF-905F-104655CBCE77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C503693-ED5F-4DBF-905F-104655CBCE77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
