@@ -8,8 +8,7 @@ namespace BikeRent.Infra.Database
     {
         public DbSet<Bike> Bikes { get; init; }
 
-        public BikeRentDbContext() {
-        }
+        public BikeRentDbContext(DbContextOptions<BikeRentDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

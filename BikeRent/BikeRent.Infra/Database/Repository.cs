@@ -4,14 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BikeRent.Infra.Database
 {
-    public class Repository<T> : IRepository<T> where T: Entity
+    public abstract class Repository<T> : IRepository<T> where T: Entity
     {
         protected readonly BikeRentDbContext _dbContext;
-        protected readonly DbSet<T> _dbSet;
+        protected abstract DbSet<T> DbSet { get; }
         public Repository(BikeRentDbContext dbContext)
         {
             _dbContext = dbContext;
-            _dbSet = _dbContext.Set<T>();
         }
 
         public async Task Add(T entity) 
@@ -21,7 +20,7 @@ namespace BikeRent.Infra.Database
 
         public async Task<T?> FindById(Guid id)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return await DbSet.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<T?> Update(T entity)

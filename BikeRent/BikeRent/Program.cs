@@ -1,4 +1,5 @@
 using BikeRent.Infra.Configuration;
+using BikeRent.Publisher.Configuration;
 internal class Program
 {
     private static void Main(string[] args)
@@ -9,6 +10,8 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddMongoDBConfig(builder.Configuration);
+        builder.Services.AddRepositories();
+        builder.Services.AddServices();
 
         var app = builder.Build();
 
