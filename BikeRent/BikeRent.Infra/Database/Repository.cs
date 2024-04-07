@@ -1,16 +1,17 @@
-﻿using BikeRent.Domain;
+﻿using BikeRent.Domain.Entities;
 using BikeRent.Infra.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BikeRent.Infra.Database
 {
-    public abstract class Repository<T> : IRepository<T> where T: Entity
+    public class Repository<T> : IRepository<T> where T: Entity
     {
         protected readonly BikeRentDbContext _dbContext;
-        protected abstract DbSet<T> DbSet { get; }
+        protected readonly DbSet<T> _dbSet;
         public Repository(BikeRentDbContext dbContext)
         {
             _dbContext = dbContext;
+            _dbSet = dbContext.Set<T>();
         }
 
         public async Task Add(T entity) 
@@ -20,7 +21,7 @@ namespace BikeRent.Infra.Database
 
         public async Task<T?> FindById(Guid id)
         {
-            return await DbSet.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<T?> Update(T entity)

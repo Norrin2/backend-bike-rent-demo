@@ -12,6 +12,7 @@ internal class Program
         builder.Services.AddMongoDBConfig(builder.Configuration);
         builder.Services.AddRepositories();
         builder.Services.AddServices();
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         var app = builder.Build();
 

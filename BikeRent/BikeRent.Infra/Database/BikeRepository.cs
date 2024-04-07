@@ -1,4 +1,4 @@
-﻿using BikeRent.Domain;
+﻿using BikeRent.Domain.Entities;
 using BikeRent.Infra.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +10,9 @@ namespace BikeRent.Infra.Database
         {
         }
 
-        protected override DbSet<Bike> DbSet => _dbContext.Bikes;
-
         public async Task<Bike?> FindByLicensePlate(string licensePlate)
         {
-            return await DbSet.FirstOrDefaultAsync(x => x.LicensePlate == licensePlate);
+            return await _dbSet.FirstOrDefaultAsync(x => x.LicensePlate == licensePlate);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Flunt.Validations;
 
-namespace BikeRent.Domain
+namespace BikeRent.Domain.Entities
 {
-    public class Bike: Entity
+    public class Bike : Entity
     {
         public string LicensePlate { get; private set; }
         public string ModelName { get; private set; }

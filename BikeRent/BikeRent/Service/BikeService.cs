@@ -1,15 +1,19 @@
-﻿using BikeRent.Domain;
+﻿using AutoMapper;
+using BikeRent.Domain.Entities;
 using BikeRent.Infra.Interfaces;
 using BikeRent.Publisher.Interfaces;
+using BikeRent.Publisher.ViewModel;
 
 namespace BikeRent.Publisher.Service
 {
     public class BikeService : ServiceBase<Bike>, IBikeService
     {
         private readonly IBikeRepository _bikeRepository;
-        public BikeService(IBikeRepository repository): base(repository) 
+        private readonly IMapper _mapper;
+        public BikeService(IBikeRepository repository, IMapper mapper): base(repository) 
         { 
             _bikeRepository = repository;
+            _mapper = mapper;
         }
 
         private async Task ValidateExistingLicensePlate(string licensePlate)
@@ -21,8 +25,9 @@ namespace BikeRent.Publisher.Service
             }
         }
 
-        public async Task<Bike?> AddBike(Bike bike)
+        public async Task<Bike?> AddBike(BikeViewModel viewModel)
         {
+            var bike = _mapper.Map<Bike>(viewModel);
             AddNotifications(bike);
             if (!IsValid) return null;
 
@@ -48,6 +53,7 @@ namespace BikeRent.Publisher.Service
             if (!IsValid) return null;
 
             await _repository.Update(bike);
+            await _repository.SaveChanges();
             return bike;
         }
     }

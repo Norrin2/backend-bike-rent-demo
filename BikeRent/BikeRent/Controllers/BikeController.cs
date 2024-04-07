@@ -1,5 +1,6 @@
-using BikeRent.Domain;
+using BikeRent.Domain.Entities;
 using BikeRent.Publisher.Interfaces;
+using BikeRent.Publisher.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRent.Controllers
@@ -32,7 +33,7 @@ namespace BikeRent.Controllers
 
 
         [HttpPost()]
-        public async Task<IActionResult> Create([FromBody] Bike body)
+        public async Task<IActionResult> Create([FromBody] BikeViewModel body)
         {
             var bike = await _bikeService.AddBike(body);
 

@@ -9,6 +9,7 @@ namespace BikeRent.Infra.Configuration
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IBikeRepository, BikeRepository>();
+            services.AddScoped<IDeliverymanRepository, DeliverymanRepository>();
 
             return services;
         }

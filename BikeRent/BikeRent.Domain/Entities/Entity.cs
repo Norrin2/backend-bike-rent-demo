@@ -1,12 +1,12 @@
 ﻿using Flunt.Notifications;
 
-namespace BikeRent.Domain
+namespace BikeRent.Domain.Entities
 {
-    public class Entity: Notifiable<Notification>
+    public class Entity : Notifiable<Notification>
     {
         public Guid Id { get; set; }
 
-        protected Entity() 
+        protected Entity()
         {
             Id = Guid.NewGuid();
         }

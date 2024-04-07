@@ -1,4 +1,4 @@
-﻿using BikeRent.Domain;
+﻿using BikeRent.Domain.Entities;
 using Flunt.Notifications;
 
 namespace BikeRent.Publisher.Interfaces
