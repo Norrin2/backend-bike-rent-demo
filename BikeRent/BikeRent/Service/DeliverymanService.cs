@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BikeRent.Domain.Entities;
-using BikeRent.Infra.Database;
 using BikeRent.Infra.Interfaces;
 using BikeRent.Publisher.Interfaces;
 using BikeRent.Publisher.ViewModel;
@@ -28,7 +27,6 @@ namespace BikeRent.Publisher.Service
             if (!IsValid) return null;
 
             await _deliverymanRepository.Add(deliveryMan);
-            await _deliverymanRepository.SaveChanges();
             return deliveryMan;
         }
 

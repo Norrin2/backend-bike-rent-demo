@@ -35,7 +35,7 @@ namespace BikeRent.Publisher.Service
             if (!IsValid) return null;
 
             await _repository.Add(bike);
-            await _repository.SaveChanges();
+
             return bike;
         }
 
@@ -53,7 +53,6 @@ namespace BikeRent.Publisher.Service
             if (!IsValid) return null;
 
             await _repository.Update(bike);
-            await _repository.SaveChanges();
             return bike;
         }
     }

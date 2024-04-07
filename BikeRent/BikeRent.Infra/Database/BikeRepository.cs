@@ -1,18 +1,19 @@
 ﻿using BikeRent.Domain.Entities;
 using BikeRent.Infra.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace BikeRent.Infra.Database
 {
     public class BikeRepository : Repository<Bike>, IBikeRepository
     {
-        public BikeRepository(BikeRentDbContext dbContext) : base(dbContext)
+        public BikeRepository(IMongoDatabase database) : base(database)
         {
         }
 
         public async Task<Bike?> FindByLicensePlate(string licensePlate)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.LicensePlate == licensePlate);
+            return await _collection.AsQueryable().FirstOrDefaultAsync(x => x.LicensePlate == licensePlate);
         }
     }
 }

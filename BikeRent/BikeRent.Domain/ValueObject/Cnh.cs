@@ -1,14 +1,16 @@
 ﻿using BikeRent.Domain.Entities;
 using Flunt.Notifications;
 using Flunt.Validations;
+using System.Text.Json.Serialization;
 
 namespace BikeRent.Domain.ValueObject
 {
     public class Cnh: Notifiable<Notification>
     {
-        public string Number { get; set; }
-        public CnhType CnhType { get; set; }
-        public string CnhUrl { get; set; }
+        public string Number { get; private set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public CnhType CnhType { get; private set; }
+        public string CnhUrl { get; private set; }
         public Cnh(string number, CnhType cnhType, string cnhUrl)
         {
             AddNotifications(new Contract<Bike>()

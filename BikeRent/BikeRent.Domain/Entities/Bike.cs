@@ -21,9 +21,10 @@ namespace BikeRent.Domain.Entities
 
         public void UpdateLicensePlate(string newLicensePlate)
         {
+            if (string.IsNullOrEmpty(newLicensePlate))
+                AddNotification(nameof(LicensePlate), "License plate must not be null");
+
             LicensePlate = newLicensePlate;
-            AddNotifications(new Contract<Bike>()
-                .IsNotNullOrEmpty(LicensePlate, nameof(LicensePlate), "License plate must not be null"));
         }
     }
 }

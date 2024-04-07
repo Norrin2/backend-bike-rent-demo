@@ -1,7 +1,6 @@
-﻿using BikeRent.Infra.Database;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace BikeRent.Infra.Configuration
 {
@@ -16,7 +15,10 @@ namespace BikeRent.Infra.Configuration
                 Environment.Exit(0);
             }
 
-            services.AddDbContext<BikeRentDbContext>(options => options.UseMongoDB(connectionString, dataBaseName));
+            var client = new MongoClient(connectionString);
+            var database = client.GetDatabase(dataBaseName);
+
+            services.AddSingleton(database);
 
             return services;
         }
