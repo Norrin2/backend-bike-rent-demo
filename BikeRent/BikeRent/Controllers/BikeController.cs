@@ -50,5 +50,25 @@ namespace BikeRent.Controllers
 
             return Ok(bike);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateLicensePlate(Guid id, [FromQuery] string licensePlate)
+        {
+            var bike = await _bikeService.UpdateLicensePlate(id, licensePlate);
+
+            var notifications = _bikeService.GetNotifications();
+            if (notifications.Any())
+            {
+                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Bike));
+                if (notificationNotFound != null)
+                {
+                    return NotFound(notificationNotFound.Message);
+                }
+
+                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+            }
+
+            return Ok(bike);
+        }
     }
 }
