@@ -14,7 +14,7 @@ namespace BikeRent.Domain.Entities
 
         [JsonIgnore]
         [BsonIgnore]
-        public bool IsValid => Notifications != null && Notifications.Any();
+        public bool IsValid => Notifications == null || !Notifications.Any();
 
         protected Entity()
         {

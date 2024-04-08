@@ -10,10 +10,13 @@ namespace BikeRent.Publisher.Service
     {
         private readonly IMapper _mapper;
         private readonly IDeliverymanRepository _deliverymanRepository;
-        public DeliverymanService(IDeliverymanRepository repository, IMapper mapper) : base(repository)
+        private readonly IBikeRepository _bikeRepository;
+
+        public DeliverymanService(IMapper mapper, IDeliverymanRepository deliverymanRepository, IBikeRepository bikeRepository) : base(deliverymanRepository)
         {
             _mapper = mapper;
-            _deliverymanRepository = repository;
+            _deliverymanRepository = deliverymanRepository;
+            _bikeRepository = bikeRepository;
         }
 
         public async Task<Deliveryman?> Add(DeliverymanViewModel viewModel)
@@ -46,6 +49,70 @@ namespace BikeRent.Publisher.Service
             {
                 AddNotification(cnh, "CNH alredy exists");
             }
+        }
+
+        public async Task<Deliveryman?> RentBike(BikeRentViewModel viewModel)
+        {
+            
+            var bikeTask = _bikeRepository.FindById(viewModel.BikeId);
+            var deliveryManTask = _deliverymanRepository.FindById(viewModel.DeliveryManId);
+
+            await Task.WhenAll(bikeTask, deliveryManTask);
+            var bike = bikeTask.Result;
+            var deliveryman = deliveryManTask.Result;
+
+            if (bike == null)
+            {
+                AddNotification(nameof(bike), "Bike not found");
+                return null;
+            }
+
+            if (deliveryman == null)
+            {
+                AddNotification(nameof(bike), "Deliveryman not found");
+                return null;
+            }
+
+            deliveryman.RentBike(bike, viewModel.Plan);
+            AddNotifications(deliveryman.Notifications);
+
+            if (IsValid)
+            {
+                await _deliverymanRepository.Update(deliveryman);
+            }
+            return deliveryman;
+        }
+
+        public async Task<decimal> FinishRentAndGetCost(FinishRentViewModel viewModel)
+        {
+            var bikeTask = _bikeRepository.FindById(viewModel.BikeId);
+            var deliveryManTask = _deliverymanRepository.FindById(viewModel.DeliveryManId);
+
+            await Task.WhenAll(bikeTask, deliveryManTask);
+            var bike = bikeTask.Result;
+            var deliveryman = deliveryManTask.Result;
+            decimal cost = 0;
+            if (bike == null)
+            {
+                AddNotification(nameof(bike), "Bike not found");
+                return cost;
+            }
+
+            if (deliveryman == null)
+            {
+                AddNotification(nameof(bike), "Deliveryman not found");
+                return cost;
+            }
+
+            cost = deliveryman.FinishRentAndGetCost(bike, viewModel.EndDate);
+            AddNotifications(deliveryman.Notifications);
+
+            if (IsValid)
+            {
+                await _deliverymanRepository.Update(deliveryman);
+            }
+
+            return cost;
         }
     }
 }

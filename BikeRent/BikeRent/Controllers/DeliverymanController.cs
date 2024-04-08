@@ -23,7 +23,7 @@ namespace BikeRent.Publisher.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] DeliverymanViewModel body)
         {
-            var bike = await _service.Add(body);
+            var deliveryman = await _service.Add(body);
 
             var notifications = _service.GetNotifications();
             if (notifications.Any())
@@ -37,7 +37,7 @@ namespace BikeRent.Publisher.Controllers
                 return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
             }
 
-            return Ok(bike);
+            return Ok(deliveryman);
         }
 
         [HttpGet("{id}")]
@@ -61,6 +61,53 @@ namespace BikeRent.Publisher.Controllers
         {
             var entities = await _service.FindAll();
             return Ok(entities);
+        }
+
+        [HttpPost("rent")]
+        [ProducesResponseType(typeof(Deliveryman), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Rent([FromBody] BikeRentViewModel body)
+        {
+            var deliveryman = await _service.RentBike(body);
+
+            var notifications = _service.GetNotifications();
+            if (notifications.Any())
+            {
+                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
+                if (notificationNotFound != null)
+                {
+                    return NotFound(notificationNotFound.Message);
+                }
+
+                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+            }
+
+            return Ok(deliveryman);
+        }
+
+
+        [HttpPost("finish-rent")]
+        [ProducesResponseType(typeof(decimal), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> FinishRent([FromBody] FinishRentViewModel body)
+        {
+            var cost = await _service.FinishRentAndGetCost(body);
+
+            var notifications = _service.GetNotifications();
+            if (notifications.Any())
+            {
+                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
+                if (notificationNotFound != null)
+                {
+                    return NotFound(notificationNotFound.Message);
+                }
+
+                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+            }
+
+            return Ok(cost);
         }
     }
 }
