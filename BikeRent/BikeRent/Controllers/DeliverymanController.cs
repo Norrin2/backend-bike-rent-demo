@@ -1,5 +1,6 @@
 ﻿using BikeRent.Domain.Entities;
 using BikeRent.Publisher.Interfaces;
+using BikeRent.Publisher.Service;
 using BikeRent.Publisher.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,9 @@ namespace BikeRent.Publisher.Controllers
         }
 
         [HttpPost()]
+        [ProducesResponseType(typeof(Deliveryman), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] DeliverymanViewModel body)
         {
             var bike = await _service.Add(body);
@@ -34,6 +38,29 @@ namespace BikeRent.Publisher.Controllers
             }
 
             return Ok(bike);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Deliveryman), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> FindById(Guid id)
+        {
+            var entity = await _service.FindById(id);
+
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(entity);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Deliveryman>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> FindAll()
+        {
+            var entities = await _service.FindAll();
+            return Ok(entities);
         }
     }
 }

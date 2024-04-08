@@ -7,5 +7,6 @@ namespace BikeRent.Infra.Interfaces
         Task Add(T entity);
         Task<T?> FindById(Guid id);
         Task<T?> Update(T entity);
+        Task<IEnumerable<T>> FindAll();
     }
 }

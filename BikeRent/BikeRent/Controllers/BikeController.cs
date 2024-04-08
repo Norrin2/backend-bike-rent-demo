@@ -19,6 +19,8 @@ namespace BikeRent.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Bike), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> FindById(Guid id)
         {
             var bike = await _bikeService.FindById(id);
@@ -32,7 +34,10 @@ namespace BikeRent.Controllers
         }
 
 
-        [HttpPost()]
+        [HttpPost]
+        [ProducesResponseType(typeof(Bike), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] BikeViewModel body)
         {
             var bike = await _bikeService.AddBike(body);
@@ -53,6 +58,9 @@ namespace BikeRent.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(Bike), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateLicensePlate(Guid id, [FromQuery] string licensePlate)
         {
             var bike = await _bikeService.UpdateLicensePlate(id, licensePlate);
@@ -70,6 +78,14 @@ namespace BikeRent.Controllers
             }
 
             return Ok(bike);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Bike>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> FindAll()
+        {
+            var entities = await _bikeService.FindAll();
+            return Ok(entities);
         }
     }
 }

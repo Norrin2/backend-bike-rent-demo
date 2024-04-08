@@ -6,6 +6,7 @@ namespace BikeRent.Publisher.Interfaces
     public interface IServiceBase<T> where T : Entity
     {
         Task<T?> FindById(Guid id);
+        Task<IEnumerable<T>> FindAll();
         IEnumerable<Notification> GetNotifications();
     }
 }

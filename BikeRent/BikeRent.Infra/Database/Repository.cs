@@ -45,5 +45,10 @@ namespace BikeRent.Infra.Database
 
             return null;
         }
+
+        public async Task<IEnumerable<T>> FindAll()
+        {
+            return await _collection.AsQueryable().ToListAsync();
+        }
     }
 }

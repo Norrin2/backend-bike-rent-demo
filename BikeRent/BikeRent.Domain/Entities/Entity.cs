@@ -9,7 +9,7 @@ namespace BikeRent.Domain.Entities
         public Guid Id { get; set; }
         [JsonIgnore]
         [BsonIgnore]
-        public IList<Notification> Notifications => _notifications == null ? _notifications = [] : _notifications;
+        public IList<Notification> Notifications => _notifications ??= [];
         private IList<Notification> _notifications;
 
         [JsonIgnore]
