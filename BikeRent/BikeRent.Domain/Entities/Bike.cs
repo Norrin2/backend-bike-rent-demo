@@ -12,7 +12,7 @@ namespace BikeRent.Domain.Entities
         {
             AddNotifications(new Contract<Bike>()
                .IsNotNullOrEmpty(licensePlate, nameof(LicensePlate), "License plate must not be null")
-               .IsNotNullOrEmpty(modelName, nameof(ModelName), "Model name must not be null"));
+               .IsNotNullOrEmpty(modelName, nameof(ModelName), "Model name must not be null").Notifications);
 
             LicensePlate = licensePlate;
             ModelName = modelName;

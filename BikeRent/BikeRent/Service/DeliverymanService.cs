@@ -19,7 +19,7 @@ namespace BikeRent.Publisher.Service
         public async Task<Deliveryman?> Add(DeliverymanViewModel viewModel)
         {
             var deliveryMan = _mapper.Map<Deliveryman>(viewModel);
-            AddNotifications(deliveryMan);
+            AddNotifications(deliveryMan.Notifications);
             if (!IsValid) return null;
 
             await Task.WhenAll(ValidateExistingCnh(viewModel.Cnh.Number),

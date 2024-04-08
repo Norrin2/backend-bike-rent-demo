@@ -11,9 +11,9 @@ namespace BikeRent.Domain.Entities
         public Deliveryman(string cnpj, Cnh cnh)
         {
             AddNotifications(new Contract<Deliveryman>()
-               .IsNotNullOrEmpty(cnpj, nameof(Cnpj), "CNPJ must not be null"));
+               .IsNotNullOrEmpty(cnpj, nameof(Cnpj), "CNPJ must not be null").Notifications);
 
-            AddNotifications(cnh);
+            AddNotifications(cnh.Notifications);
 
             Cnpj = cnpj;
             Cnh = cnh;
@@ -23,7 +23,7 @@ namespace BikeRent.Domain.Entities
         {
             Cnh.UpdateCnhPhotoUrl(cnhUrl);
 
-            AddNotifications(Cnh);
+            AddNotifications(Cnh.Notifications);
         }
     }
 }

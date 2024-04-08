@@ -28,7 +28,7 @@ namespace BikeRent.Publisher.Service
         public async Task<Bike?> AddBike(BikeViewModel viewModel)
         {
             var bike = _mapper.Map<Bike>(viewModel);
-            AddNotifications(bike);
+            AddNotifications(bike.Notifications);
             if (!IsValid) return null;
 
             await ValidateExistingLicensePlate(bike.LicensePlate);
@@ -46,7 +46,7 @@ namespace BikeRent.Publisher.Service
                 return null;
 
             bike.UpdateLicensePlate(licensePlate);
-            AddNotifications(bike);
+            AddNotifications(bike.Notifications);
             if (!IsValid) return null;
 
             await ValidateExistingLicensePlate(licensePlate);
