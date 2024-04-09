@@ -27,13 +27,7 @@ namespace BikeRent.Publisher.Controllers
             var notifications = _service.GetNotifications();
             if (notifications.Any())
             {
-                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
-                if (notificationNotFound != null)
-                {
-                    return NotFound(notificationNotFound.Message);
-                }
-
-                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+                return BadRequest(notifications);
             }
 
             return Ok(deliveryman);
@@ -76,10 +70,10 @@ namespace BikeRent.Publisher.Controllers
                 var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman) || n.Key == nameof(Bike));
                 if (notificationNotFound != null)
                 {
-                    return NotFound(notificationNotFound.Message);
+                    return NotFound(notificationNotFound);
                 }
 
-                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+                return BadRequest(notifications);
             }
 
             return Ok(deliveryman);
@@ -117,10 +111,10 @@ namespace BikeRent.Publisher.Controllers
                 var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
                 if (notificationNotFound != null)
                 {
-                    return NotFound(notificationNotFound.Message);
+                    return NotFound(notificationNotFound);
                 }
 
-                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+                return BadRequest(notifications);
             }
 
             return Ok();
@@ -140,10 +134,10 @@ namespace BikeRent.Publisher.Controllers
                 var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
                 if (notificationNotFound != null)
                 {
-                    return NotFound(notificationNotFound.Message);
+                    return NotFound(notificationNotFound);
                 }
 
-                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+                return BadRequest(notifications);
             }
 
             return Ok();

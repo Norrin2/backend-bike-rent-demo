@@ -27,6 +27,12 @@ namespace BikeRent.Domain.ValueObject
 
         public decimal FinishRentAndGetCost(DateTime returnDate)
         {
+            if (returnDate < StartDate)
+            {
+                AddNotification(nameof(EndDate), "EndDate can't be before the start date of the rent");
+                return 0;
+            }
+
             decimal dailyRate = (int)Plan;
             EndDate = GetEndDate();
             if (returnDate < EndDate)

@@ -45,13 +45,7 @@ namespace BikeRent.Controllers
             var notifications = _bikeService.GetNotifications();
             if (notifications.Any())
             {
-                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Bike));
-                if (notificationNotFound != null) 
-                {
-                    return NotFound(notificationNotFound.Message);
-                }
-
-                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+                return BadRequest(notifications);
             }
 
             return Ok(bike);
@@ -71,10 +65,10 @@ namespace BikeRent.Controllers
                 var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Bike));
                 if (notificationNotFound != null)
                 {
-                    return NotFound(notificationNotFound.Message);
+                    return NotFound(notificationNotFound);
                 }
 
-                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+                return BadRequest(notifications);
             }
 
             return Ok(bike);
