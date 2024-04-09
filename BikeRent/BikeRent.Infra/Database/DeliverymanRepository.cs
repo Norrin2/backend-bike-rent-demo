@@ -20,5 +20,13 @@ namespace BikeRent.Infra.Database
         {
             return await _collection.AsQueryable().FirstOrDefaultAsync(x => x.Cnh.Number == cnh);
         }
+
+        public async Task<bool> CheckIfBikeIsRentedByADeliveryman(Guid bikeId)
+        {
+            return await _collection.AsQueryable().AnyAsync(
+                                    x => x.Rents != null &&
+                                         x.Rents.Any(rent => rent.Bike.Id == bikeId
+                                                     && rent.EndDate == null));
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace BikeRent.Domain.ValueObject
         public decimal FinishRentAndGetCost(DateTime returnDate)
         {
             decimal dailyRate = (int)Plan;
-            EndDate = returnDate;
+            EndDate = GetEndDate();
             if (returnDate < EndDate)
             {
                 int extraDays = (EndDate.Value - returnDate).Days;
@@ -65,6 +65,25 @@ namespace BikeRent.Domain.ValueObject
                     break;
             }
             return penaltyRate;
+        }
+
+        private DateTime GetEndDate()
+        {
+            DateTime returnDate;
+            switch (Plan)
+            {
+                case RentPlan.Days7:
+                    returnDate = StartDate.AddDays(7);
+                    break;
+                case RentPlan.Days15:
+                    returnDate = StartDate.AddDays(15);
+                    break;
+                default:
+                    returnDate = StartDate.AddDays(30);
+                    break;
+            }
+
+            return returnDate;
         }
     }
 }

@@ -67,6 +67,12 @@ namespace BikeRent.Publisher.Service
                 return null;
             }
 
+            if (await _deliverymanRepository.CheckIfBikeIsRentedByADeliveryman(viewModel.BikeId))
+            {
+                AddNotification(nameof(bike), "Bike is not available");
+                return null;
+            }
+
             if (deliveryman == null)
             {
                 AddNotification(nameof(bike), "Deliveryman not found");
