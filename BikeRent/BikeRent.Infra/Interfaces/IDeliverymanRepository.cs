@@ -7,5 +7,6 @@ namespace BikeRent.Infra.Interfaces
         Task<Deliveryman?> FindByCnh(string cnh);
         Task<Deliveryman?> FindByCnpj(string cnpj);
         Task<bool> CheckIfBikeIsRentedByADeliveryman(Guid bikeId);
+        Task<IEnumerable<Deliveryman>> FindAvalilableDeliveryman();
     }
 }

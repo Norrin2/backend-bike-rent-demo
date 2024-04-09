@@ -1,6 +1,5 @@
 ﻿using BikeRent.Domain.Entities;
 using BikeRent.Publisher.Interfaces;
-using BikeRent.Publisher.Service;
 using BikeRent.Publisher.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,7 +73,7 @@ namespace BikeRent.Publisher.Controllers
             var notifications = _service.GetNotifications();
             if (notifications.Any())
             {
-                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
+                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman) || n.Key == nameof(Bike));
                 if (notificationNotFound != null)
                 {
                     return NotFound(notificationNotFound.Message);
@@ -98,6 +97,23 @@ namespace BikeRent.Publisher.Controllers
             var notifications = _service.GetNotifications();
             if (notifications.Any())
             {
+                return NotFound(string.Join(", ", notifications.Select(n => n.Message)));
+            }
+
+            return Ok(cost);
+        }
+
+        [HttpPost("accept-order")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AcceptOrder([FromBody] AcceptOrderViewModel body)
+        {
+            await _service.AcceptOrder(body);
+
+            var notifications = _service.GetNotifications();
+            if (notifications.Any())
+            {
                 var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
                 if (notificationNotFound != null)
                 {
@@ -107,7 +123,30 @@ namespace BikeRent.Publisher.Controllers
                 return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
             }
 
-            return Ok(cost);
+            return Ok();
+        }
+
+        [HttpPost("finish-order")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> FinishOrder([FromQuery] Guid orderId)
+        {
+            await _service.FinishOrder(orderId);
+
+            var notifications = _service.GetNotifications();
+            if (notifications.Any())
+            {
+                var notificationNotFound = notifications.FirstOrDefault(n => n.Key == nameof(Deliveryman));
+                if (notificationNotFound != null)
+                {
+                    return NotFound(notificationNotFound.Message);
+                }
+
+                return BadRequest(string.Join(", ", notifications.Select(n => n.Message)));
+            }
+
+            return Ok();
         }
     }
 }

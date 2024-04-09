@@ -8,5 +8,7 @@ namespace BikeRent.Publisher.Interfaces
         Task<Deliveryman?> Add(DeliverymanViewModel viewModel);
         Task<Deliveryman?> RentBike(BikeRentViewModel viewModel);
         Task<decimal> FinishRentAndGetCost(FinishRentViewModel viewModel);
+        Task AcceptOrder(AcceptOrderViewModel viewModel);
+        Task FinishOrder(Guid deliverymanId);
     }
 }

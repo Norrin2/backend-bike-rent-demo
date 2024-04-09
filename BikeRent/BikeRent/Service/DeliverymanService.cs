@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BikeRent.Domain.Entities;
+using BikeRent.Domain.ValueObject;
 using BikeRent.Infra.Interfaces;
 using BikeRent.Publisher.Interfaces;
 using BikeRent.Publisher.ViewModel;
@@ -11,12 +12,14 @@ namespace BikeRent.Publisher.Service
         private readonly IMapper _mapper;
         private readonly IDeliverymanRepository _deliverymanRepository;
         private readonly IBikeRepository _bikeRepository;
+        private readonly IRepository<Order> _orderRepository;
 
-        public DeliverymanService(IMapper mapper, IDeliverymanRepository deliverymanRepository, IBikeRepository bikeRepository) : base(deliverymanRepository)
+        public DeliverymanService(IMapper mapper, IDeliverymanRepository deliverymanRepository, IBikeRepository bikeRepository, IRepository<Order> orderRepository) : base(deliverymanRepository)
         {
             _mapper = mapper;
             _deliverymanRepository = deliverymanRepository;
             _bikeRepository = bikeRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<Deliveryman?> Add(DeliverymanViewModel viewModel)
@@ -119,6 +122,69 @@ namespace BikeRent.Publisher.Service
             }
 
             return cost;
+        }
+
+        public async Task AcceptOrder(AcceptOrderViewModel viewModel)
+        {
+            var orderTask = _orderRepository.FindById(viewModel.OrderId);
+            var deliveryManTask = _deliverymanRepository.FindById(viewModel.DeliverymanId);
+
+            await Task.WhenAll(orderTask, deliveryManTask);
+            var order = orderTask.Result;
+            var deliveryman = deliveryManTask.Result;
+            if (order == null)
+            {
+                AddNotification(nameof(order), "Order not found");
+                return;
+            }
+
+            if (deliveryman == null)
+            {
+                AddNotification(nameof(deliveryman), "Deliveryman not found");
+                return;
+            }
+
+            if (!order.OrderNotifications.Any(n => n.DeliveryManId == deliveryman.Id))
+            {
+                AddNotification(nameof(OrderNotification), "Cant accept an order you have not been notified of");
+                return;
+            }
+
+            if (order.Status != OrderStatus.Availabe)
+            {
+                AddNotification(nameof(OrderStatus), "Order is not Available");
+                return;
+            }
+
+            deliveryman.StartOrder(order.Id);
+            order.AcceptOrder();
+
+            await Task.WhenAll(_deliverymanRepository.Update(deliveryman),
+                               _orderRepository.Update(order));
+
+        }
+
+        public async Task FinishOrder(Guid deliverymanId)
+        {
+            var deliveryman = await _repository.FindById(deliverymanId);
+            if (deliveryman == null)
+            {
+                AddNotification(nameof(deliveryman), "Deliveryman not found");
+                return;
+            }
+
+            if (deliveryman.CurrentOrderId == null)
+            {
+                AddNotification(nameof(Order), "Deliveryman has no order");
+                return;
+            }
+
+            var order = await _orderRepository.FindById(deliveryman.CurrentOrderId.GetValueOrDefault());
+            order.FinishOrder();
+            deliveryman.FinishOrder();
+
+            await Task.WhenAll(_deliverymanRepository.Update(deliveryman),
+                   _orderRepository.Update(order));
         }
     }
 }

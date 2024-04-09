@@ -28,5 +28,12 @@ namespace BikeRent.Infra.Database
                                          x.Rents.Any(rent => rent.Bike.Id == bikeId
                                                      && rent.EndDate == null));
         }
+
+        public async Task<IEnumerable<Deliveryman>> FindAvalilableDeliveryman()
+        {
+            return await _collection.AsQueryable().Where(
+                                    x => x.Rents != null && x.Rents.Any(rent => rent.EndDate == null)
+                                    && x.CurrentOrderId == null).ToListAsync();
+        }
     }
 }

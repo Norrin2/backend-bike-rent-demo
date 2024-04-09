@@ -7,6 +7,7 @@ namespace BikeRent.Domain.Entities
     {
         public string Cnpj { get;  private set; }
         public Cnh Cnh { get; private set; }
+        public Guid? CurrentOrderId { get; private set; }
         public IEnumerable<Rent> Rents { get; private set; }
 
         public Deliveryman(string cnpj, Cnh cnh)
@@ -52,6 +53,16 @@ namespace BikeRent.Domain.Entities
             }
 
             return rent.FinishRentAndGetCost(returnDate);
+        }
+
+        public void StartOrder(Guid orderId)
+        {
+            CurrentOrderId = orderId;
+        }
+
+        public void FinishOrder()
+        {
+            CurrentOrderId = null;
         }
     }
 }

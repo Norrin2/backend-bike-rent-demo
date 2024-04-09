@@ -9,6 +9,7 @@ namespace BikeRent.Publisher.Configuration
         {
             services.AddScoped<IBikeService, BikeService>();
             services.AddScoped<IDeliverymanService, DeliverymanService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             return services;
         }

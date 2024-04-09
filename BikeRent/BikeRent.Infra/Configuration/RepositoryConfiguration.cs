@@ -1,4 +1,5 @@
-﻿using BikeRent.Infra.Database;
+﻿using BikeRent.Domain.Entities;
+using BikeRent.Infra.Database;
 using BikeRent.Infra.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ namespace BikeRent.Infra.Configuration
         {
             services.AddScoped<IBikeRepository, BikeRepository>();
             services.AddScoped<IDeliverymanRepository, DeliverymanRepository>();
+            services.AddScoped<IRepository<Order>, OrderRepository>();
 
             return services;
         }
