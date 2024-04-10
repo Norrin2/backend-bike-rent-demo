@@ -1,8 +1,6 @@
-﻿using BikeRent.Domain.Entities;
-
-namespace BikeRent.Domain.ValueObject
+﻿namespace BikeRent.Domain.Entities
 {
-    public class OrderMessage
+    public class OrderMessage: Entity
     {
         public Order Order { get; private set; }
         public Guid DeliveryManId { get; private set; }

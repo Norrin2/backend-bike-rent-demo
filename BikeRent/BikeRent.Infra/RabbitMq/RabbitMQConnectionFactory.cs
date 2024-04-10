@@ -27,6 +27,7 @@ namespace BikeRent.Infra.RabbitMq
                 Password = rabbitMQSettings.GetSection("Password").Value,
                 Port = int.Parse(rabbitMQSettings.GetSection("Port").Value),
                 HostName = rabbitMQSettings.GetSection("HostName").Value,
+                DispatchConsumersAsync = true
             };
 
             _connection = factory.CreateConnection();

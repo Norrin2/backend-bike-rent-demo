@@ -1,20 +1,25 @@
+using BikeRent.Domain.Entities;
 using BikeRent.Infra.Interfaces;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Text.Json;
 
 namespace BikeRent.Consumer
 {
     public class Worker : BackgroundService
     {
-        private static int WAIT_TIME = 15000;
+        private static readonly int WAIT_TIME = 15000;
 
         private readonly ILogger<Worker> _logger;
         private readonly IRabbitMQConnectionFactory _connectionFactory;
-        public Worker(ILogger<Worker> logger, IRabbitMQConnectionFactory connectionFactory)
+        private readonly IOrderMessageRepository _orderMessageRepository;
+
+        public Worker(ILogger<Worker> logger, IRabbitMQConnectionFactory connectionFactory, IOrderMessageRepository orderMessageRepository)
         {
             _logger = logger;
             _connectionFactory = connectionFactory;
+            _orderMessageRepository = orderMessageRepository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,7 +33,7 @@ namespace BikeRent.Consumer
                                 autoDelete: false,
                                 arguments: null);
 
-            var consumer = new EventingBasicConsumer(channel);
+            var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.Received += Consumer_Received;
             channel.BasicConsume(
                 "order",
@@ -45,12 +50,23 @@ namespace BikeRent.Consumer
             }
         }
 
-        private void Consumer_Received(
+        private async Task Consumer_Received(
             object sender, BasicDeliverEventArgs e)
         {
+            var body = Encoding.UTF8.GetString(e.Body.ToArray());
             _logger.LogInformation(
-                $"[new Message | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] " +
-                Encoding.UTF8.GetString(e.Body.ToArray()));
+                $"[new Message | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] {body} ");
+
+            try
+            {
+                var orderMessage = JsonSerializer.Deserialize<OrderMessage>(body);
+                await _orderMessageRepository.Add(orderMessage);
+            } catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Error reading message: {ex} ");
+            }
+
         }
     }
 }

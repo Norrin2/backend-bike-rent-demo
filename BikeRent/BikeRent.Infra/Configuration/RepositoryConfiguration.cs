@@ -12,6 +12,7 @@ namespace BikeRent.Infra.Configuration
             services.AddScoped<IBikeRepository, BikeRepository>();
             services.AddScoped<IDeliverymanRepository, DeliverymanRepository>();
             services.AddScoped<IRepository<Order>, OrderRepository>();
+            services.AddSingleton<IOrderMessageRepository, OrderMessageRepository>();
 
             return services;
         }

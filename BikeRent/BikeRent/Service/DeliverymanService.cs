@@ -12,14 +12,17 @@ namespace BikeRent.Publisher.Service
         private readonly IMapper _mapper;
         private readonly IDeliverymanRepository _deliverymanRepository;
         private readonly IBikeRepository _bikeRepository;
+        private readonly IOrderMessageRepository _orderMessageRepository;
         private readonly IRepository<Order> _orderRepository;
 
-        public DeliverymanService(IMapper mapper, IDeliverymanRepository deliverymanRepository, IBikeRepository bikeRepository, IRepository<Order> orderRepository) : base(deliverymanRepository)
+        public DeliverymanService(IMapper mapper, IDeliverymanRepository deliverymanRepository, IBikeRepository bikeRepository,
+                                  IOrderMessageRepository orderMessageRepository, IRepository<Order> orderRepository) : base(deliverymanRepository)
         {
             _mapper = mapper;
             _deliverymanRepository = deliverymanRepository;
             _bikeRepository = bikeRepository;
             _orderRepository = orderRepository;
+            _orderMessageRepository = orderMessageRepository;
         }
 
         public async Task<Deliveryman?> Add(DeliverymanViewModel viewModel)
@@ -144,15 +147,17 @@ namespace BikeRent.Publisher.Service
                 return;
             }
 
-            if (!order.OrderNotifications.Any(n => n.DeliveryManId == deliveryman.Id))
-            {
-                AddNotification(nameof(OrderMessage), "Cant accept an order you have not been notified of");
-                return;
-            }
-
             if (order.Status != OrderStatus.Availabe)
             {
                 AddNotification(nameof(OrderStatus), "Order is not Available");
+                return;
+            }
+
+            var orderMessage = _orderMessageRepository.FindByDeliveryManAndOrderId(viewModel.DeliverymanId, viewModel.OrderId);
+
+            if (orderMessage == null)
+            {
+                AddNotification(nameof(OrderMessage), "Cant accept an order you have not been notified of");
                 return;
             }
 

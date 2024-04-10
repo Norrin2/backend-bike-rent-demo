@@ -41,14 +41,29 @@ namespace BikeRent.Publisher.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> FindById(Guid id)
         {
-            var bike = await _service.FindById(id);
+            var order = await _service.FindById(id);
 
-            if (bike == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return Ok(bike);
+            return Ok(order);
+        }
+
+        [HttpGet("messages/{id}")]
+        [ProducesResponseType(typeof(Order), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> FindMessagesByOrderId(Guid id)
+        {
+            var messages = await _service.FindMessagesByOrderId(id);
+
+            if (messages == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(messages);
         }
     }
 }
