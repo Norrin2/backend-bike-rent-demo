@@ -11,14 +11,13 @@ namespace BikeRent.Domain.Entities
         public decimal Value { get; private set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public OrderStatus Status { get; private set; }
-        public IEnumerable<OrderNotification> OrderNotifications { get; private set; }
+        public IEnumerable<OrderMessage> OrderNotifications { get; private set; }
 
-        public Order(decimal value, IEnumerable<OrderNotification> orderNotifications)
+        public Order(decimal value)
         {
             CreatedAt = DateTime.Now;
             Value = value;
             Status = OrderStatus.Availabe;
-            OrderNotifications = orderNotifications;
         }
 
         public void AcceptOrder()

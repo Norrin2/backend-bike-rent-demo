@@ -146,7 +146,7 @@ namespace BikeRent.Publisher.Service
 
             if (!order.OrderNotifications.Any(n => n.DeliveryManId == deliveryman.Id))
             {
-                AddNotification(nameof(OrderNotification), "Cant accept an order you have not been notified of");
+                AddNotification(nameof(OrderMessage), "Cant accept an order you have not been notified of");
                 return;
             }
 

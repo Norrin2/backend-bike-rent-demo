@@ -13,6 +13,7 @@ internal class Program
         builder.Services.AddRepositories();
         builder.Services.AddServices();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddRabbitMQ();
 
         var app = builder.Build();
 

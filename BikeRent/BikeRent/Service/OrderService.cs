@@ -2,25 +2,31 @@
 using BikeRent.Domain.ValueObject;
 using BikeRent.Infra.Interfaces;
 using BikeRent.Publisher.Interfaces;
+using System.Text.Json;
 
 namespace BikeRent.Publisher.Service
 {
     public class OrderService : ServiceBase<Order>, IOrderService
     {
         private readonly IDeliverymanRepository _deliverymanRepository;
-        public OrderService(IRepository<Order> repository, IDeliverymanRepository deliverymanRepository) : base(repository)
+        private readonly IMessageService _messageService;
+        public OrderService(IRepository<Order> repository, IDeliverymanRepository deliverymanRepository, IMessageService messageService) : base(repository)
         {
             _deliverymanRepository = deliverymanRepository;
+            _messageService = messageService;
         }
 
         public async Task<Order> PlaceOrder(decimal value)
         {
             var availableDeliveryman = await _deliverymanRepository.FindAvalilableDeliveryman();
-            var deliverymanToNotify = availableDeliveryman.Select(d =>
-                new OrderNotification(d.Id, d.Cnpj));
 
-            var order = new Order(value, deliverymanToNotify);
+            var order = new Order(value);
+            var messages = availableDeliveryman.Select(d =>
+                JsonSerializer.Serialize(
+                new OrderMessage(order, d.Id, d.Cnpj)));
+
             await _repository.Add(order);
+            _messageService.PublishMessages(messages);
 
             return order;
         }
