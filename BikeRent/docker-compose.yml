@@ -15,7 +15,7 @@ services:
       - mongodb_data:/data/db
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management
     container_name: rabbitmq
     restart: always
     environment:
@@ -26,6 +26,7 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_data:/var/log/rabbitmq
 
 volumes:
   mongodb_data:

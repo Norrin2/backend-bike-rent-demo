@@ -1,7 +1,6 @@
 ﻿using BikeRent.Infra.Interfaces;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using System.Text.Json;
 
 namespace BikeRent.Infra.RabbitMq
 {
@@ -33,8 +32,7 @@ namespace BikeRent.Infra.RabbitMq
             _connection = factory.CreateConnection();
 
             using var channel = _connection.CreateModel();
-            channel.ExchangeDeclare("orderExchange", ExchangeType.Fanout);
-           channel.Close();
+            channel.Close();
 
             return _connection;
         }

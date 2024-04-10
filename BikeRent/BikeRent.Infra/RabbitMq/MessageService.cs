@@ -20,11 +20,11 @@ namespace BikeRent.Infra.RabbitMq
             foreach (string message in messages)
             {
                 ReadOnlyMemory<byte> body = Encoding.UTF8.GetBytes(message);
-                channel.BasicPublish(exchange: "orderExchange",
-                                                routingKey: "",
-                                                mandatory: true,
-                                                basicProperties: null,
-                                                body: body);
+                channel.BasicPublish(exchange: "",
+                                     routingKey: "order",
+                                     mandatory: true,
+                                     basicProperties: null,
+                                     body: body);
             }
 
 
